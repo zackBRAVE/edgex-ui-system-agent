@@ -1,8 +1,20 @@
 <template>
-  <div class="service-list">
-    <div class="header">
-      <span>Service List</span>
-      <button>Refresh</button>
-    </div>
+  <div class="system-agent">
+    <ServiceList></ServiceList>
   </div>
 </template>
+
+<script>
+import ServiceList from '@/components/ServiceList.vue'
+
+export default {
+  name: 'ServiceListView',
+  components: { ServiceList },
+}
+</script>
+
+<style>
+.system-agent {
+  margin: 1vh;
+}
+</style>

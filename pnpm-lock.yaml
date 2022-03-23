@@ -3,25 +3,36 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/core': ^7.12.16
   '@babel/eslint-parser': ^7.12.16
+  '@popperjs/core': ^2.10.2
   '@vue/cli-plugin-babel': ~5.0.0
   '@vue/cli-plugin-eslint': ~5.0.0
   '@vue/cli-plugin-router': ~5.0.0
   '@vue/cli-plugin-vuex': ~5.0.0
   '@vue/cli-service': ~5.0.0
+  axios: 0.26.1
+  bootstrap: ^5.1.3
+  bootstrap-icons: ^1.8.1
+  bootstrap-vue-3: ^0.1.8
   core-js: ^3.8.3
   eslint: ^7.32.0
   eslint-plugin-vue: ^8.0.3
   hygen: ^6.2.0
   prettier: ^2.6.0
   vue: ^3.2.13
+  vue-axios: ^3.4.1
   vue-router: ^4.0.3
   vuex: ^4.0.0
 
 dependencies:
+  '@popperjs/core': registry.npmmirror.com/@popperjs/core/2.11.4
+  bootstrap: registry.npmmirror.com/bootstrap/5.1.3_@popperjs+core@2.11.4
+  bootstrap-icons: registry.npmmirror.com/bootstrap-icons/1.8.1
+  bootstrap-vue-3: registry.npmmirror.com/bootstrap-vue-3/0.1.8_bootstrap@5.1.3
   core-js: registry.npmmirror.com/core-js/3.21.1
   hygen: registry.npmmirror.com/hygen/6.2.0_eslint@7.32.0+prettier@2.6.0
   prettier: registry.npmmirror.com/prettier/2.6.0
   vue: registry.npmmirror.com/vue/3.2.31
+  vue-axios: registry.npmmirror.com/vue-axios/3.4.1_axios@0.26.1+vue@3.2.31
   vue-router: registry.npmmirror.com/vue-router/4.0.14_vue@3.2.31
   vuex: registry.npmmirror.com/vuex/4.0.2_vue@3.2.31
 
@@ -33,6 +44,7 @@ devDependencies:
   '@vue/cli-plugin-router': registry.npmmirror.com/@vue/cli-plugin-router/5.0.3_@vue+cli-service@5.0.3
   '@vue/cli-plugin-vuex': registry.npmmirror.com/@vue/cli-plugin-vuex/5.0.3_@vue+cli-service@5.0.3
   '@vue/cli-service': registry.npmmirror.com/@vue/cli-service/5.0.3_@babel+core@7.17.7
+  axios: registry.npmmirror.com/axios/0.26.1
   eslint: registry.npmmirror.com/eslint/7.32.0
   eslint-plugin-vue: registry.npmmirror.com/eslint-plugin-vue/8.5.0_eslint@7.32.0
 
@@ -1637,6 +1649,12 @@ packages:
     version: 1.0.0-next.21
     dev: true
 
+  registry.npmmirror.com/@popperjs/core/2.11.4:
+    resolution: {integrity: sha512-q/ytXxO5NKvyT37pmisQAItCFqA7FD/vNb8dgaJy3/630Fsc+Mz9/9f2SziBoIZ30TJooXyTwZmhi1zjXmObYg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@popperjs/core/-/core-2.11.4.tgz}
+    name: '@popperjs/core'
+    version: 2.11.4
+    dev: false
+
   registry.npmmirror.com/@sideway/address/4.1.3:
     resolution: {integrity: sha512-8ncEUtmnTsMmL7z1YPB47kPUq7LpKWJNFPsRzHiIajGC5uXlWGn+AmkYPcHNl8S4tcEGx+cnORnNYaw2wvL+LQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@sideway/address/-/address-4.1.3.tgz}
     name: '@sideway/address'
@@ -2834,6 +2852,16 @@ packages:
       postcss-value-parser: registry.npmmirror.com/postcss-value-parser/4.2.0
     dev: true
 
+  registry.npmmirror.com/axios/0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/axios/-/axios-0.26.1.tgz}
+    name: axios
+    version: 0.26.1
+    dependencies:
+      follow-redirects: registry.npmmirror.com/follow-redirects/1.14.9
+    transitivePeerDependencies:
+      - debug
+    dev: true
+
   registry.npmmirror.com/babel-loader/8.2.3_c57fa08b67e0055c44c6192257d88d4e:
     resolution: {integrity: sha512-n4Zeta8NC3QAsuyiizu0GkmRcQ6clkV9WFUnUf1iXP//IeSKbWjofW3UHyZVwlOB4y039YQKefawyTn64Zwbuw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/babel-loader/-/babel-loader-8.2.3.tgz}
     id: registry.npmmirror.com/babel-loader/8.2.3
@@ -2987,6 +3015,36 @@ packages:
     name: boolbase
     version: 1.0.0
     dev: true
+
+  registry.npmmirror.com/bootstrap-icons/1.8.1:
+    resolution: {integrity: sha512-IXUqislddPJfwq6H+2nTkHyr9epO9h6u1AG0OZCx616w+TgzeoCjfmI3qJMQqt1J586gN2IxzB4M99Ip4sTZ1w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/bootstrap-icons/-/bootstrap-icons-1.8.1.tgz}
+    name: bootstrap-icons
+    version: 1.8.1
+    engines: {node: '>=10'}
+    dev: false
+
+  registry.npmmirror.com/bootstrap-vue-3/0.1.8_bootstrap@5.1.3:
+    resolution: {integrity: sha512-MIsWALS6YPiH7hVa6QFN1CrOircCX18UklhD9efnxaN93vUtA759kdgFb9+m2m2NDPSjTXTxGkhOWIpCpIhPKQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/bootstrap-vue-3/-/bootstrap-vue-3-0.1.8.tgz}
+    id: registry.npmmirror.com/bootstrap-vue-3/0.1.8
+    name: bootstrap-vue-3
+    version: 0.1.8
+    peerDependencies:
+      bootstrap: 5.x.x
+    dependencies:
+      bootstrap: registry.npmmirror.com/bootstrap/5.1.3_@popperjs+core@2.11.4
+      core-js: registry.npmmirror.com/core-js/3.21.1
+    dev: false
+
+  registry.npmmirror.com/bootstrap/5.1.3_@popperjs+core@2.11.4:
+    resolution: {integrity: sha512-fcQztozJ8jToQWXxVuEyXWW+dSo8AiXWKwiSSrKWsRB/Qt+Ewwza+JWoLKiTuQLaEPhdNAJ7+Dosc9DOIqNy7Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/bootstrap/-/bootstrap-5.1.3.tgz}
+    id: registry.npmmirror.com/bootstrap/5.1.3
+    name: bootstrap
+    version: 5.1.3
+    peerDependencies:
+      '@popperjs/core': ^2.10.2
+    dependencies:
+      '@popperjs/core': registry.npmmirror.com/@popperjs/core/2.11.4
+    dev: false
 
   registry.npmmirror.com/brace-expansion/1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/brace-expansion/-/brace-expansion-1.1.11.tgz}
@@ -4615,9 +4673,8 @@ packages:
     version: 3.2.5
     dev: true
 
-  registry.npmmirror.com/follow-redirects/1.14.9_debug@4.3.3:
+  registry.npmmirror.com/follow-redirects/1.14.9:
     resolution: {integrity: sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.14.9.tgz}
-    id: registry.npmmirror.com/follow-redirects/1.14.9
     name: follow-redirects
     version: 1.14.9
     engines: {node: '>=4.0'}
@@ -4626,8 +4683,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dependencies:
-      debug: registry.npmmirror.com/debug/4.3.3
     dev: true
 
   registry.npmmirror.com/forwarded/0.2.0:
@@ -5068,7 +5123,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: registry.npmmirror.com/eventemitter3/4.0.7
-      follow-redirects: registry.npmmirror.com/follow-redirects/1.14.9_debug@4.3.3
+      follow-redirects: registry.npmmirror.com/follow-redirects/1.14.9
       requires-port: registry.npmmirror.com/requires-port/1.0.0
     transitivePeerDependencies:
       - debug
@@ -8263,6 +8318,19 @@ packages:
     version: 1.1.2
     engines: {node: '>= 0.8'}
     dev: true
+
+  registry.npmmirror.com/vue-axios/3.4.1_axios@0.26.1+vue@3.2.31:
+    resolution: {integrity: sha512-8YZYUOQrBEJktxoQtrM4rr2LfVcDaWfJqv8MqtLlgLlkuBvCYKFSZSo6AXQ4YcCzdgccDqstmuaEh68lcH9xWA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-axios/-/vue-axios-3.4.1.tgz}
+    id: registry.npmmirror.com/vue-axios/3.4.1
+    name: vue-axios
+    version: 3.4.1
+    peerDependencies:
+      axios: '>= 0.20.0'
+      vue: ^3.0.0 || ^2.0.0
+    dependencies:
+      axios: registry.npmmirror.com/axios/0.26.1
+      vue: registry.npmmirror.com/vue/3.2.31
+    dev: false
 
   registry.npmmirror.com/vue-eslint-parser/8.3.0_eslint@7.32.0:
     resolution: {integrity: sha512-dzHGG3+sYwSf6zFBa0Gi9ZDshD7+ad14DGOdTLjruRVgZXe2J+DcZ9iUhyR48z5g1PqRa20yt3Njna/veLJL/g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vue-eslint-parser/-/vue-eslint-parser-8.3.0.tgz}
