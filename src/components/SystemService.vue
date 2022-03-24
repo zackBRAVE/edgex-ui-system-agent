@@ -62,6 +62,7 @@ export default {
       operationFailed: null,
       hideOperationMsg: null,
       recoverOperations: null,
+      refreshStatus: null,
       operationDisabled: false,
     }
   },
@@ -69,16 +70,29 @@ export default {
     this.alive = this.isAlive(this.data.statusCode)
     this.operationDone = this.createAlert('operation succeeded!', 'success')
     this.operationFailed = this.createAlert('operation failed!', 'danger')
+
     this.hideOperationMsg = this.debounce(() => {
       this.operationDone.hide()
       this.operationFailed.hide()
     }, 1500)
+
     this.recoverOperations = this.debounce(() => {
       this.operationDisabled = false
       this.$refs.start.classList.remove('disabled')
       this.$refs.restart.classList.remove('disabled')
       this.$refs.stop.classList.remove('disabled')
     }, 1500)
+
+    this.refreshStatus = this.throttle(() => {
+      let _this = this
+      let timerId = setInterval(() => {
+        console.log('re', timerId)
+        _this.$emit('refreshStatus')
+      }, 3000)
+      setTimeout(() => {
+        clearInterval(timerId)
+      }, 9100)
+    }, 9200)
   },
   updated() {
     this.alive = this.isAlive(this.data.statusCode)
@@ -100,6 +114,10 @@ export default {
         res => {
           _this.operationDone.changeMessage(`${res.serviceName} ${op} succeeded!`)
           _this.operationDone.show()
+          if (op === 'start' || op === 'restart') {
+            console.log('refresh')
+            _this.refreshStatus()
+          }
         },
         err => {
           _this.operationFailed.changeMessage(`${err?.serviceName} ${op} failed!\n${err?.message}`)

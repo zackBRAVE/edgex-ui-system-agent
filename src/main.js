@@ -30,8 +30,8 @@ app.config.globalProperties.throttle = (fn, interval) => {
     let context = this
     let args = arguments
     if (!timer) {
+      fn.apply(context, args)
       timer = setTimeout(() => {
-        fn.apply(context, args)
         clearTimeout(timer)
         timer = null
       }, interval)
