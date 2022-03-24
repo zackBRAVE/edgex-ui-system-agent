@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-header">
       <span>
-        <i class="bi bi-file-earmark-code-fill text-info me-1"></i>
+        <i class="bi bi-file-earmark-code-fill text-primary me-1"></i>
         {{ service }}
         <span>Config Inspect</span>
       </span>
