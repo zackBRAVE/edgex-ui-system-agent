@@ -1,7 +1,5 @@
 <template>
-  <div class="system-agent">
-    <ServiceList></ServiceList>
-  </div>
+  <ServiceList></ServiceList>
 </template>
 
 <script>
@@ -12,9 +10,3 @@ export default {
   components: { ServiceList },
 }
 </script>
-
-<style>
-.system-agent {
-  margin: 1vh;
-}
-</style>
