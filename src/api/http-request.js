@@ -10,22 +10,25 @@ import axios from 'axios'
  * @param final
  */
 export const post = function (path, data, success, error, final) {
-  return axios
+  let result = axios
     .post(path, data, Config.config)
     .then(res => {
-      console.log('post', res)
-      if (res.data.success) {
-        success(res.data.content)
+      if (res.status.toString().startsWith('2')) {
+        success(res.data)
       } else {
-        error(res.data.message)
+        error(res?.statusText)
+        throw res?.statusText
       }
     })
     .catch(err => {
-      error(err)
+      error(err?.message)
+      throw err?.message
     })
     .finally(() => {
       if (typeof final === 'function') final()
     })
+
+  return result
 }
 
 /**
@@ -36,19 +39,23 @@ export const post = function (path, data, success, error, final) {
  * @param final
  */
 export const get = function (path, success, error, final) {
-  return axios
+  let result = axios
     .get(path, Config.config)
     .then(res => {
       if (res.status.toString().startsWith('2')) {
         success(res.data)
       } else {
-        error(res.statusText)
+        error(res?.statusText)
+        throw res?.statusText
       }
     })
     .catch(err => {
-      error(err)
+      error(err?.message)
+      throw err?.message
     })
     .finally(() => {
       if (typeof final === 'function') final()
     })
+
+  return result
 }

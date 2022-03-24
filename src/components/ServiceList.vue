@@ -1,9 +1,29 @@
 <template>
-  <div class="card service-list">
+  <div v-if="agentDown" class="card text-dark bg-light">
+    <div class="card-body mt-5 mb-5 ms-4 me-5 w-auto">
+      <h4 class="card-title fw-bolder">Oops!!! system agent service is unavailable!</h4>
+      <p class="card-text fs-5">
+        This could be a network reason, or it could be that the system agent microservice is not
+        running, make sure there is no network problem or that the system agent service is already
+        running!
+      </p>
+      <hr />
+      <p class="card-text fs-6">
+        EdgeXFoundry uses a microservices architecture, each service is running independently,
+        please make sure that the current service is already running, if you have manually started
+        the service, click the Refresh button.
+      </p>
+      <button type="button" class="btn btn-primary" @click="reping">
+        <span class="fw-bold"> <i class="bi bi-arrow-clockwise pe-1"></i>{{ refreshMsg }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div v-else class="card service-list">
     <div class="card-header header">
       <span> <i class="bi bi-card-list pe-2"></i>System Services List</span>
       <button type="button" class="btn btn-primary" @click="refreshServices">
-        <span> <i class="bi bi-arrow-clockwise pe-1"></i>{{ refreshMsg }} </span>
+        <span class="fw-bold"> <i class="bi bi-arrow-clockwise pe-1"></i>{{ refreshMsg }} </span>
       </button>
     </div>
 
@@ -20,6 +40,7 @@
         </thead>
         <tbody>
           <SystemService
+            @refresh-status="updateServiceState"
             v-for="service in serviceStates"
             :key="service.name"
             :data="service"
@@ -32,7 +53,7 @@
 
 <script>
 import SystemService from '@/components/SystemService.vue'
-import { getAllServices, getHealthState } from '@/api/system-agent'
+import { getAllServices, getHealthState, ping } from '@/api/system-agent'
 
 let ServiceInfo = function (id, host, port) {
   this.id = id
@@ -54,10 +75,11 @@ export default {
   setup() {},
   data() {
     return {
+      agentDown: false,
       refreshMsg: 'Refresh',
-      loadingMsg: 'Loading...',
       refreshDone: null,
       refreshFailed: null,
+      pingFailed: null,
       hideRefreshMsg: null,
       services: '',
       serviceInfos: [],
@@ -66,18 +88,25 @@ export default {
   },
   created() {
     this.initServices()
-  },
-  mounted() {
     this.refreshDone = this.createAlert('refresh succeeded!', 'success')
     this.refreshFailed = this.createAlert('refresh failed!', 'danger')
+    this.pingFailed = this.createAlert(
+      'The system agent service is unavailable! Please check the service and try again.',
+      'danger'
+    )
     this.hideRefreshMsg = this.debounce(() => {
       this.refreshDone.hide()
       this.refreshFailed.hide()
-    }, 1500)
+      this.pingFailed.hide()
+    }, 2000)
   },
+  mounted() {},
   methods: {
     initServices() {
-      this.updateServiceInfo()
+      this.ping()
+        .then(() => {
+          return this.updateServiceInfo()
+        })
         .then(() => {
           return this.updateServiceState()
         })
@@ -89,7 +118,7 @@ export default {
       let _this = this
 
       let button = event.target
-      button.innerText = _this.loadingMsg
+      _this.refreshMsg = 'Loading...'
       button.disabled = true
 
       _this
@@ -101,7 +130,7 @@ export default {
           _this.refreshFailed.show()
         })
         .finally(() => {
-          button.innerText = _this.refreshMsg
+          _this.refreshMsg = 'Refresh'
           button.disabled = false
           _this.hideRefreshMsg()
         })
@@ -116,6 +145,9 @@ export default {
           data.forEach(function (service) {
             let serviceInfo = new ServiceInfo(service.ServiceId, service.Host, service.Port)
             serviceInfos.push(serviceInfo)
+          })
+          serviceInfos = serviceInfos.sort(function (a, b) {
+            return a.id < b.id ? -1 : 1
           })
         },
         error => {
@@ -146,6 +178,9 @@ export default {
             )
             serviceStates.push(serviceState)
           })
+          serviceStates = serviceStates.sort(function (a, b) {
+            return a.name < b.name ? -1 : 1
+          })
         },
         error => {
           console.log('get health state error:', error)
@@ -154,6 +189,45 @@ export default {
           _this.serviceStates = serviceStates
         }
       )
+    },
+    ping() {
+      let _this = this
+
+      return ping(
+        () => {
+          _this.agentDown = false
+        },
+        error => {
+          console.log('ping failed:', error)
+          _this.agentDown = true
+        }
+      )
+    },
+    reping(event) {
+      let _this = this
+
+      let button = event.target
+      _this.refreshMsg = 'Loading...'
+      button.disabled = true
+
+      let result = _this
+        .ping()
+        .then(() => {
+          return this.updateServiceInfo()
+        })
+        .then(() => {
+          return this.updateServiceState()
+        })
+        .catch(() => {
+          _this.pingFailed.show()
+        })
+        .finally(() => {
+          _this.refreshMsg = 'Refresh'
+          button.disabled = false
+          _this.hideRefreshMsg()
+        })
+
+      return result
     },
   },
 }

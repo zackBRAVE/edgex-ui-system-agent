@@ -57,6 +57,10 @@ app.config.globalProperties.createAlert = (message, alertType) => {
     this.style.opacity = 0
   }
 
+  wrapper.changeMessage = function (msg) {
+    this.innerText = msg
+  }
+
   wrapper.hide()
 
   return wrapper
