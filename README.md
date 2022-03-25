@@ -4,7 +4,7 @@
 
 micro-frontend portion for system-agent using Vue3
 
-## Project setup
+### Project setup
 
 ``` bash
 pnpm install
