@@ -13,7 +13,7 @@ const routes = [
     name: 'service-list',
     component: ServiceListView,
     meta: {
-      title: 'System Service List',
+      title: 'System Services List',
     },
   },
   {
@@ -39,7 +39,7 @@ const router = createRouter({
   routes,
 })
 
-const defaultTitle = 'System Service List'
+const defaultTitle = 'System Services List'
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title ? to.meta.title : defaultTitle
   next()
