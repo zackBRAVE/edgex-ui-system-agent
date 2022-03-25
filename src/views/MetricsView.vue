@@ -1,6 +1,7 @@
 <template>
-  <ServiceMetrics :service="service" :metrics="metrics" :loaded="loaded"></ServiceMetrics>
+  <ServiceMetrics :service="service" :metrics="metrics" :loaded="loaded" @update-metrics="updateMetrics"></ServiceMetrics>
 </template>
+
 <script>
 import ServiceMetrics from '@/components/ServiceMetrics.vue'
 import { getMetrics } from '@/api/system-agent'
@@ -63,5 +64,20 @@ export default {
       this.getMetricsFailed.hide()
     }, 2000)
   },
+  methods: {
+    updateMetrics() {
+      let _this = this
+      getMetrics(
+        _this.service,
+        res => {
+          _this.metrics = res[0].metrics
+        },
+        err => {
+          console.error(err)
+          throw err
+        }
+      )
+    }
+  }
 }
 </script>

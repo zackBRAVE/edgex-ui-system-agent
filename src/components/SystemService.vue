@@ -86,7 +86,6 @@ export default {
     this.refreshStatus = this.throttle(() => {
       let _this = this
       let timerId = setInterval(() => {
-        console.log('re', timerId)
         _this.$emit('refreshStatus')
       }, 3000)
       setTimeout(() => {
@@ -115,7 +114,6 @@ export default {
           _this.operationDone.changeMessage(`${res.serviceName} ${op} succeeded!`)
           _this.operationDone.show()
           if (op === 'start' || op === 'restart') {
-            console.log('refresh')
             _this.refreshStatus()
           }
         },

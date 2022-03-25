@@ -1,59 +1,156 @@
 <template>
-  <v-chart class="chart" :option="option" />
+  <v-chart class="chart" :option="option" :autoresize="autoresize" ref="chart" />
 </template>
 
 <script>
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components'
-import { UniversalTransition } from 'echarts/features';
+import {
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  DataZoomComponent,
+} from 'echarts/components'
+import { UniversalTransition } from 'echarts/features'
 import VChart from 'vue-echarts'
 import { ref, defineComponent } from 'vue'
 
-use([CanvasRenderer, LineChart, GridComponent, TooltipComponent, LegendComponent, UniversalTransition])
+use([
+  CanvasRenderer,
+  LineChart,
+  GridComponent,
+  TooltipComponent,
+  LegendComponent,
+  DataZoomComponent,
+  UniversalTransition,
+])
 
 export default defineComponent({
   name: 'MetricChart',
   components: {
     VChart,
   },
-  setup() {
+  props: {
+    metricType: {
+      type: String,
+      required: true,
+    },
+    metricValue: {
+      type: Array,
+      required: true,
+    },
+    metricValue2: {
+      type: Array,
+      required: false,
+    },
+    timeArray: {
+      type: Array,
+      required: true,
+    },
+    startTime: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {}
+  },
+  setup(props) {
+    const autoresize = ref(true)
     const option = ref({
       tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)',
+        show: true,
+        trigger: 'axis',
+        valueFormatter: value => value.toFixed(2) + '%',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#316ccc',
+          },
+        },
       },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines'],
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: props.timeArray,
       },
+      yAxis: [
+        {
+          type: 'value',
+          axisLabel: {
+            margin: 2,
+            formatter: '{value}%',
+          },
+        },
+      ],
+      grid: {
+        left: 40,
+        right: 20,
+      },
+      dataZoom: [
+        {
+          startValue: props.startTime,
+        },
+        {
+          type: 'inside',
+        },
+      ],
+      calculable: true,
       series: [
         {
-          name: 'Traffic Sources',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          data: [
-            { value: 335, name: 'Direct' },
-            { value: 310, name: 'Email' },
-            { value: 234, name: 'Ad Networks' },
-            { value: 135, name: 'Video Ads' },
-            { value: 1548, name: 'Search Engines' },
-          ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
+          name: '',
+          type: 'line',
+          smooth: true,
+          itemStyle: {
+            color: '#518cee',
           },
+          lineStyle: {
+            color: '#518cee',
+          },
+          areaStyle: {
+            color: '#316ccc',
+          },
+          data: props.metricValue,
         },
       ],
     })
 
-    return { option }
+    if (props.metricValue2) {
+      option.value.series.push({
+        name: '',
+        type: 'line',
+        smooth: true,
+        itemStyle: {
+          color: '#922C48',
+        },
+        lineStyle: {
+          color: '#922C48',
+        },
+        areaStyle: {
+          color: '#922C48',
+        },
+        data: props.metricValue2,
+      })
+    }
+
+    return { autoresize, option }
+  },
+  created() {
+    this.option.series[0].name = this.metricType
+    this.option.series[0].data = this.metricValue
+    this.option.xAxis.data = this.timeArray
+  },
+  mounted() {
+    this.$refs.chart.chart.on('dataZoom', event => {
+      if (event.batch) {
+        this.option.dataZoom[0].end = event.batch[0].end
+        this.option.dataZoom[0].start = event.batch[0].start
+      } else {
+        this.option.dataZoom[0].end = event.end
+        this.option.dataZoom[0].start = event.start
+      }
+    })
   },
 })
 </script>

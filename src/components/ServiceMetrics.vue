@@ -1,7 +1,7 @@
 <template>
-  <div v-if="!loaded" class="text-center mt-5">
-    <div class="spinner-border d-inline-block me-3" role="status"></div>
-    <h3 class="d-inline-block">Loading...</h3>
+  <div v-if="!loaded" class="vh-80 d-flex justify-content-center align-items-center">
+    <div class="spinner-border me-3" role="status"></div>
+    <h3 class="d-inline-block pt-2">Loading...</h3>
   </div>
   <div v-else>
     <div class="card mb-3">
@@ -12,7 +12,7 @@
       <div class="card-body">
         <div class="d-flex">
           <div class="flex-shrink-0 me-2">
-            <i class="bi bi-server fs-1 align-bottom"></i>
+            <i class="bi bi-server fs-1 align-bottom text-info"></i>
           </div>
           <div class="flex-grow-1 ms-2">
             <h5 class="fw-bold">
@@ -21,7 +21,7 @@
             </h5>
 
             <div class="fw-bold d-inline">
-              <span class="badge bg-info me-1 fw-bolder">mem_usage</span>
+              <span class="badge bg-primary me-1 fw-bolder">mem_usage</span>
               <span class="align-middle">{{ metrics.raw.mem_usage }} </span>
             </div>
 
@@ -31,7 +31,7 @@
             </div>
 
             <div class="fw-bold ms-2 d-inline">
-              <span class="badge bg-primary me-1 fw-bolder">net_io</span>
+              <span class="badge bg-info me-1 fw-bolder">net_io</span>
               <span class="align-middle">{{ metrics.raw.net_io }}</span>
             </div>
           </div>
@@ -44,6 +44,7 @@
             v-model="refreshRate"
             @change="rateChange"
           >
+            <option value="1">1s</option>
             <option selected value="3">3s</option>
             <option value="5">5s</option>
             <option value="10">10s</option>
@@ -60,8 +61,14 @@
             <span>Memory usage</span>
           </div>
           <div class="card-body overflow-auto">
-            <div class="vw-auto h-300" id="memory-usage">
-              <MetricChart></MetricChart>
+            <div class="width-100 h-300">
+              <MetricChart
+                ref="memChart"
+                :metric-type="memUsage"
+                :metric-value="memMetrics"
+                :time-array="timeArray"
+                :start-time="startTime"
+              ></MetricChart>
             </div>
           </div>
         </div>
@@ -73,7 +80,15 @@
             <span>CPU usage</span>
           </div>
           <div class="card-body overflow-auto">
-            <div class="vw-auto h-300" id="cpu-usage"></div>
+            <div class="vw-auto h-300 ps-1">
+              <MetricChart
+                ref="cpuChart"
+                :metric-type="cpuUsage"
+                :metric-value="cpuMetrics"
+                :time-array="timeArray"
+                :start-time="startTime"
+              ></MetricChart>
+            </div>
           </div>
         </div>
       </div>
@@ -84,7 +99,16 @@
             <span>Network traffic</span>
           </div>
           <div class="card-body overflow-auto">
-            <div class="vw-auto h-300" id="network-usage"></div>
+            <div class="vw-auto h-300">
+              <MetricChart
+                ref="netChart"
+                :metric-type="netTraffic"
+                :metric-value="netMetricsRX"
+                :metric-value2="netMetricsTX"
+                :time-array="timeArray"
+                :start-time="startTime"
+              ></MetricChart>
+            </div>
           </div>
         </div>
       </div>
@@ -93,14 +117,8 @@
 </template>
 
 <script>
+import { ref } from 'vue'
 import MetricChart from '@/components/MetricChart.vue'
-import { ECharts as echarts } from 'vue-echarts' // eslint-disable-line no-unused-vars
-import { use } from 'echarts/core'
-import { CanvasRenderer } from 'echarts/renderers'
-import { BarChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent } from 'echarts/components'
-
-use([CanvasRenderer, BarChart, GridComponent, TooltipComponent])
 
 export default {
   components: {
@@ -122,19 +140,111 @@ export default {
   data() {
     return {
       refreshRate: 3,
-      memoryUsageChart: null,
-      cpuUsageChart: null,
-      networkUsageChart: null,
+      refreshTimer: null,
+      memUsage: 'Memory Usage',
+      cpuUsage: 'CPU Usage',
+      netTraffic: 'Network Traffic',
+      memMetrics: Array(20).fill(0),
+      cpuMetrics: Array(20).fill(0),
+      netMetricsRX: Array(20).fill(0),
+      netMetricsTX: Array(20).fill(0),
+      timeArray: Array(20).fill('00:00:00'),
+      startTime: '00:00:19',
+      netConfigured: false,
     }
   },
+  setup() {
+    const netChart = ref(null)
+    function configureNetChart() {
+      netChart.value.option.series[0].name = 'RX (Receive Bytes/sec)'
+      netChart.value.option.series[0].stack = '总量'
+      netChart.value.option.series[1].name = 'TX (Transmit Bytes/sec)'
+      netChart.value.option.series[1].stack = '总量'
+      netChart.value.option.legend = {
+        data: ['RX (Receive Bytes/sec)', 'TX (Transmit Bytes/sec)'],
+      }
+      netChart.value.option.tooltip = {
+        show: true,
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross',
+          label: {
+            backgroundColor: '#316ccc',
+          },
+        },
+      }
+      netChart.value.option.yAxis = [
+        {
+          type: 'value',
+          axisLabel: {
+            margin: 2,
+          },
+        },
+      ]
+    }
+
+    return { netChart, configureNetChart }
+  },
   created() {
-    // this.memoryUsageChart = echarts.init(document.getElementById('memory-usage'))
-    // this.cpuUsageChart = echarts.init(document.getElementById('cpu-usage'))
-    // this.networkUsageChart = echarts.init(document.getElementById('network-usage'))
+    let timeArray = []
+    let secArr = [...Array(20).keys()]
+    secArr.forEach(second => {
+      timeArray.push(`00:00:${second < 10 ? '0' + second : second}`)
+    })
+    this.timeArray = timeArray
+    this.startTime = timeArray[19]
+
+    this.refreshTimer = setInterval(() => {
+      this.$emit('updateMetrics')
+    }, this.refreshRate * 1000)
+  },
+  beforeUpdate() {
+    if (this.loaded) {
+      this.updateMetrics()
+    }
+  },
+  updated() {
+    if (!this.netConfigured && this.loaded) {
+      this.netConfigured = true
+      this.configureNetChart()
+    }
   },
   methods: {
-    rateChange(event) {
-      console.log(event.target.value)
+    rateChange() {
+      clearInterval(this.refreshTimer)
+      this.refreshTimer = setInterval(() => {
+        this.$emit('updateMetrics')
+      }, this.refreshRate * 1000)
+    },
+    updateMetrics() {
+      this.timeArray.shift()
+      this.timeArray.push(this.getTimeString())
+
+      this.memMetrics.shift()
+      this.memMetrics.push(
+        +this.metrics.raw.mem_perc.substring(0, this.metrics.raw.mem_perc.length - 1)
+      )
+
+      this.cpuMetrics.shift()
+      this.cpuMetrics.push(+this.metrics.cpuUsedPercent)
+
+      this.netMetricsRX.shift()
+      this.netMetricsTX.shift()
+      let rx_tx_array = this.metrics.raw.net_io.split('/')
+      let rx = rx_tx_array[0].trim().replace('kB', '').replace('MB', '')
+      let tx = rx_tx_array[1].trim().replace('kB', '').replace('MB', '')
+      this.netMetricsRX.push(+rx)
+      this.netMetricsTX.push(+tx)
+    },
+    getTimeString() {
+      let now = new Date()
+      let hours = now.getHours()
+      let minutes = now.getMinutes()
+      let seconds = now.getSeconds()
+
+      return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${
+        seconds < 10 ? '0' + seconds : seconds
+      }`
     },
   },
 }
@@ -147,5 +257,9 @@ export default {
 
 .h-300 {
   height: 300px;
+}
+
+.vh-80 {
+  height: 80vh;
 }
 </style>
