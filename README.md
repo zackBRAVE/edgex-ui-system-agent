@@ -1,4 +1,4 @@
-# edgex-ui-system
+# edgex-ui-system-agent
 
 ## Micro-frontend implementation for system-agent part of the [edgex-ui-go](https://github.com/edgexfoundry/edgex-ui-go) project
 
