@@ -2,7 +2,7 @@
 
 ## Micro-frontend implementation for system-agent part of the [edgex-ui-go](https://github.com/edgexfoundry/edgex-ui-go) project
 
-### micro-frontend portion for system-agent
+micro-frontend portion for system-agent using Vue3
 
 ## Project setup
 
