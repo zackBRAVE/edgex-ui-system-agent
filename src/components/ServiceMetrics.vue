@@ -210,6 +210,9 @@ export default {
     }
   },
   methods: {
+    stopRefresh() {
+      clearInterval(this.refreshTimer)
+    },
     rateChange() {
       clearInterval(this.refreshTimer)
       this.refreshTimer = setInterval(() => {

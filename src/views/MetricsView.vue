@@ -1,5 +1,11 @@
 <template>
-  <ServiceMetrics :service="service" :metrics="metrics" :loaded="loaded" @update-metrics="updateMetrics"></ServiceMetrics>
+  <ServiceMetrics
+    ref="serviceMetrics"
+    :service="service"
+    :metrics="metrics"
+    :loaded="loaded"
+    @update-metrics="updateMetrics"
+  ></ServiceMetrics>
 </template>
 
 <script>
@@ -58,6 +64,9 @@ export default {
       _this.loaded = false
     }
   },
+  beforeRouteLeave() {
+    this.$refs.serviceMetrics.stopRefresh()
+  },
   created() {
     this.getMetricsFailed = this.createAlert('get metrics failed!', 'danger')
     this.hideMsg = this.debounce(() => {
@@ -77,7 +86,7 @@ export default {
           throw err
         }
       )
-    }
-  }
+    },
+  },
 }
 </script>

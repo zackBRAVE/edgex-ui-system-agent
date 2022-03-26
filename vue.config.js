@@ -3,11 +3,11 @@ module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
     proxy: {
-      '/api': {
-        target: 'https://172.17.176.204:4040',
+      [process.env.VUE_APP_BASE_API]: {
+        target: process.env.VUE_APP_BASE_RUL,
         changeOrigin: true,
         pathRewrite: {
-          '^/api': '/',
+          ['^' + process.env.VUE_APP_BASE_API]: '/',
         },
       },
     },

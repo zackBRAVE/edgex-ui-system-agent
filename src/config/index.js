@@ -8,8 +8,10 @@ const token =
 
 export let HTTP_SERVER = HTTP + '://' + SERVER_HOST + ':' + SERVER_PORT
 
-// for CORS purpose and proxy settings, change all the urls to below
-HTTP_SERVER = '/api'
+if (process.env.NODE_ENV === 'development') {
+  // for CORS purpose and proxy settings, change all the urls to below
+  HTTP_SERVER = '/api'
+}
 
 export const config = {
   headers: {

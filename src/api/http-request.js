@@ -1,6 +1,8 @@
 import * as Config from '@/config'
 import axios from 'axios'
 
+axios.defaults.withCredentials = false //设置请求头携带cookie
+
 /**
  * 封装post请求
  * @param path
