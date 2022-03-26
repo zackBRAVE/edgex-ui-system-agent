@@ -39,7 +39,13 @@ app.config.globalProperties.throttle = (fn, interval) => {
   }
 }
 
+let alertDict = {}
+
 app.config.globalProperties.createAlert = (message, alertType) => {
+  if (alertDict[message + alertType]) {
+    return alertDict[message + alertType]
+  }
+
   let wrapper = document.createElement('div')
 
   wrapper.innerHTML = `<div class="alert alert-${alertType} position-fixed fixed-top text-center rounded-3 mt-3 m-auto p-2 w-25" role="alert"> ${message} </div>`
@@ -47,14 +53,16 @@ app.config.globalProperties.createAlert = (message, alertType) => {
   document.getElementById('app').append(wrapper)
 
   wrapper = wrapper.firstChild
-  wrapper.style.transition = 'opacity 0.5s'
+  wrapper.style.transition = 'all 0.5s'
 
   wrapper.show = function () {
+    this.style.zIndex = 999
     this.style.opacity = 1
   }
 
   wrapper.hide = function () {
     this.style.opacity = 0
+    this.style.zIndex = -10
   }
 
   wrapper.changeMessage = function (msg) {
