@@ -4,6 +4,18 @@
 
 micro-frontend portion for system-agent using Vue3
 
+### TODO
+
+- [x] Http Request Encapsulation
+- [x] System Agent APIs
+- [x] Service List
+- [x] Service Config
+- [x] Service Metrics Structure
+- [x] Metric Charts (using echarts)
+- [ ] Internationalization (adding Chinese support)
+- [ ] Migrate to Typescript
+- [ ] Refactoring
+
 ### Project setup
 
 ``` bash

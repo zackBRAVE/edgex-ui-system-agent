@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "https": "vue-cli-service build --mode prod-https",
+    "cloud": "vue-cli-service build --mode cloud",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
