@@ -270,9 +270,4 @@ table {
 .table {
   --bs-table-striped-bg: rgba(0, 0, 0, 0.02);
 }
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
 </style>
