@@ -12,6 +12,7 @@ micro-frontend portion for system-agent using Vue3
 - [x] Service Config
 - [x] Service Metrics Framework
 - [x] Metric Charts (using echarts)
+- [ ] Test
 - [ ] Internationalization (adding Chinese support)
 - [ ] Migrate to Typescript
 - [ ] Refactoring
