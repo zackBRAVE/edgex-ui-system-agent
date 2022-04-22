@@ -1,4 +1,3 @@
-import { createRouter, createWebHistory } from 'vue-router'
 import ServiceListView from '../views/ServiceListView.vue'
 
 const routes = [
@@ -34,15 +33,4 @@ const routes = [
   },
 ]
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes,
-})
-
-const defaultTitle = 'System Services List'
-router.beforeEach((to, from, next) => {
-  document.title = to.meta.title ? to.meta.title : defaultTitle
-  next()
-})
-
-export default router
+export default routes
